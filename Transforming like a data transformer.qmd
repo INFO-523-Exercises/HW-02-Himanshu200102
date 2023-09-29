@@ -1,0 +1,162 @@
+---
+title: "Transforming like a data transformer"
+format: html
+editor: visual
+---
+
+# Setting Up
+
+```{r}
+# Sets the number of significant figures to two - e.g., 0.01
+options(digits = 2)
+
+# Required package for quick package downloading and loading 
+if (!require(pacman))  
+  install.packages("pacman")
+
+# Downloads and load required packages
+pacman::p_load(dlookr, # Exploratory data analysis
+               forecast, # Needed for Box-Cox transformations
+               formattable, # HTML tables from R outputs
+               here, # Standardizes paths to data
+               kableExtra, # Alternative to formattable
+               knitr, # Needed to write HTML reports
+               missRanger, # To generate NAs
+               tidyverse) # Powerful data wrangling package suite
+```
+
+```{r}
+tornados <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv')
+
+
+tornados |>
+  head() |>
+  formattable()
+```
+
+## Describing Properties of our Data(Refined)
+
+```{r}
+tornados |>
+  select(inj,fat,len,wid) |>
+  describe() |>
+  select(described_variables, skewness) |>
+  formattable()
+```
+
+## Testing Normality
+
+-   Q-Q Plots :-
+
+    A Q-Q (quantile-quantile) plot is a graphical tool used in statistics to assess whether a dataset follows a particular theoretical distribution, such as the normal distribution. It is a visual comparison of the quantiles of the observed data against the quantiles of the expected theoretical distribution.
+
+```{r}
+tornados |>
+plot_normality(inj, fat, len, wid)
+```
+
+```{r}
+tornados %>%
+  group_by(mo) %>%
+  select(inj,fat) %>%
+  plot_normality()
+```
+
+## Transforming Data
+
+To interpret Data we will need to transform our data\
+For doing this we will use values which are greater than zero
+
+```{r}
+durMod <- tornados |>
+  filter(fat > 0)
+```
+
+Square-root, cube-root, and logarithmic transformations are commonly used mathematical techniques in data analysis and statistics to modify the scale or shape of data distributions. These transformations are applied to achieve specific goals, such as reducing skewness, stabilizing variance, or linearizing relationships between variables.
+
+## Square-root Transformation
+
+```{r}
+sqrtDur <- transform(durMod$fat, method = "sqrt")
+summary(sqrtDur)
+```
+
+```{r}
+sqrtDur |>
+  plot()
+```
+
+#### Logarithmic (+1) Transformation
+
+```{r}
+Log1Ins <- transform(durMod$fat, method = "log+1") 
+
+summary(Log1Ins)
+```
+
+```{r}
+Log1Ins |>
+  plot()
+```
+
+#### Inverse Transformation
+
+```{r}
+InvIns <- transform(durMod$fat, method = "1/x") 
+
+summary(InvIns)
+```
+
+```{r}
+InvIns |>
+  plot()
+```
+
+## Squared Transformation
+
+```{r}
+SqrdIns <- transform(durMod$fat, method = "x^2") 
+
+summary(SqrdIns)
+```
+
+```{r}
+SqrdIns |>
+  plot()
+```
+
+## Cubed Transformation
+
+```{r}
+CubeIns <- transform(durMod$fat, method = "x^3") 
+
+summary(CubeIns)
+```
+
+```{r}
+CubeIns |>
+  plot()
+```
+
+## Box Con Transformation
+
+```{r}
+BoxCoxIns <- transform(durMod$fat, method = "Box-Cox") 
+
+summary(BoxCoxIns)
+```
+
+```{r}
+BoxCoxIns <- transform(durMod$fat, method = "Box-Cox") 
+
+summary(BoxCoxIns)
+```
+
+```{r}
+BoxCoxIns |>
+  plot()
+```
+
+```{r}
+#transformation_web_report(tornados)
+```

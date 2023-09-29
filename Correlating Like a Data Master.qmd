@@ -1,0 +1,175 @@
+---
+title: "Correlating Like a Data Master"
+format: html
+editor: visual
+---
+
+# **Correlating Like a Data Master**
+
+## Setup
+
+```{r}
+if (!require(pacman))
+  install.packages("pacman")
+
+pacman::p_load(colorblindr,
+       dlookr,
+       formattable,
+       GGally,
+       ggdist,
+       ggpubr,
+       ggridges,
+       here,
+       tidyverse)
+
+# Set global ggplot() theme
+# Theme pub_clean() from the ggpubr package with base text size = 16
+theme_set(theme_pubclean(base_size = 12)) 
+# All axes titles to their respective far right sides
+theme_update(axis.title = element_text(hjust = 1))
+# Remove axes ticks
+theme_update(axis.ticks = element_blank()) 
+# Remove legend key
+theme_update(legend.key = element_blank())
+```
+
+## Load and Examine Data
+
+```{r}
+tornados <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv')
+
+
+tornados |>
+  head() |>
+  formattable()
+```
+
+## Describe and Visualize Correlation
+
+Correlation in statistics refers to a statistical measure used to quantify the strength and direction of the linear relationship between two or more variables. It helps us understand how changes in one variable are associated with changes in another variable. Correlation is commonly used in data analysis to explore the relationships between variables and to assess the degree to which they move together or in opposite directions.
+
+```{r}
+# Table of correlations between numerical variables (we are sticking to the default Pearson's r coefficient)
+correlate(tornados) |>
+  formattable()
+```
+
+```{r}
+# Correlation matrix of numerical variables
+tornados |>
+plot_correlate()
+```
+
+```{r}
+tornados |>
+  group_by(st) |>
+  plot_correlate()
+```
+
+```{r}
+tornados |> 
+  dplyr::select(fc,fat,loss) |>
+  ggpairs(aes(color = fc, alpha = 0.5)) +
+  theme(strip.background = element_blank())
+```
+
+## **Describe and Visualize Relationships Based on Target Variables**
+
+## Target Variables
+
+"Target variable" in R typically refers to the variable that you are trying to predict or explain. It is also known as the dependent variable, response variable, or outcome variable. In regression analysis, the target variable is a continuous variable, and in classification analysis, it is a categorical variable.
+
+### **Numerical Target Variables: Numerical Variable of Interest**
+
+```{r}
+# First, we need to remove NAs, they cause an error
+tornados.noNA <- tornados |> 
+  drop_na()
+
+# The numerical predictor variable that we want
+num <- target_by(tornados.noNA, fat)
+
+# Relating the variable of interest to the numerical target variable
+num_num <- relate(num,loss)
+
+# Summary of the regression analysis - the same as the summary from lm(Formula)
+summary(num_num)
+```
+
+```{r}
+# Plotting the linear relationship
+plot(num_num)
+```
+
+### **Numerical Target Variables: Categorical Variable of Interest**
+
+```{r}
+# The categorical predictor variable that we want
+num <- target_by(tornados, fat) 
+
+# We need to change Group to a factor
+num$st <- as.factor(num$st)
+
+# Relating the variable of interest to the numerical target variable
+num_cat <- relate(num, st)
+
+# Summary of the ANOVA analysis - the same as the summary from anova(lm(Formula))
+summary(num_cat)
+```
+
+```{r}
+plot(num_cat) + 
+  theme(axis.text.x = element_blank())
+```
+
+### **Categorical Target Variables: Numerical Variable of Interest**
+
+```{r}
+# The categorical predictor variable that we want
+categ <- target_by(tornados.noNA, st)
+
+# Relating the variable of interest to the numerical target variable
+cat_num <- relate(categ, fat)
+
+# Summary of descriptive statistics
+summary(cat_num)
+```
+
+```{r}
+plot(cat_num) 
+```
+
+### **Categorical Target Variables: Categorical Variable of Interest**
+
+```{r}
+# Create new categorical column
+cat_dataset <- tornados |>
+  select(fat, st) |>
+  drop_na() |>
+  mutate(HighLWP = ifelse(
+    fat > (mean(fat + sd(fat))), 
+                          "Yes", 
+                          "No"))
+
+# New dataset 
+cat_dataset |>
+  head() |>
+  formattable()
+```
+
+Formula = `HighLWP (categorical) ~ Group (categorical response)`
+
+```{r}
+# The categorical predictor variable that we want
+categ <- target_by(cat_dataset, HighLWP)
+
+# Relating the variable of interest to the categorical target variable
+cat_cat <- relate(categ, st)
+
+# Summary of the Chi-square test for Independence
+summary(cat_cat)
+```
+
+```{r}
+plot(cat_cat)
+```

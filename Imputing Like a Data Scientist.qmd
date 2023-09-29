@@ -1,0 +1,311 @@
+---
+title: "Imputing Like a Data Scientist"
+format: html
+editor: visual
+---
+
+```{r}
+# Sets the number of significant figures to two - e.g., 0.01
+options(digits = 2)
+
+# Required package for quick package downloading and loading 
+if (!require(pacman))
+  install.packages("pacman")
+
+pacman::p_load(colorblindr, # Colorblind friendly pallettes
+               cluster, # K cluster analyses
+               dlookr, # Exploratory data analysis
+               formattable, # HTML tables from R outputs
+               ggfortify, # Plotting tools for stats
+               ggpubr, # Publishable ggplots
+               here, # Standardizes paths to data
+               kableExtra, # Alternative to formattable
+               knitr, # Needed to write HTML reports
+               missRanger, # To generate NAs
+               plotly, # Visualization package
+               rattle, # Decision tree visualization
+               rpart, # rpart algorithm
+               tidyverse, # Powerful data wrangling package suite
+               visdat) # Another EDA visualization package
+
+# Set global ggplot() theme
+# Theme pub_clean() from the ggpubr package with base text size = 16
+theme_set(theme_pubclean(base_size = 16)) 
+# All axes titles to their respective far right sides
+theme_update(axis.title = element_text(hjust = 1))
+# Remove axes ticks
+theme_update(axis.ticks = element_blank()) 
+# Remove legend key
+theme_update(legend.key = element_blank())
+```
+
+```{r}
+tornados <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-16/tornados.csv')
+
+tornados |>
+  head() |>
+  formattable()
+
+```
+
+```{r}
+# What are the properties of the data
+tornados |>
+  diagnose() |>
+  formattable()
+```
+
+```{r}
+# Table showing outliers
+tornados |>
+  diagnose_outlier() |>
+  filter(outliers_ratio > 0) |>  
+  mutate(rate = outliers_mean / with_mean) |>
+  arrange(desc(rate)) |> 
+  select(-outliers_cnt) |>
+  formattable()
+```
+
+```{r}
+# Boxplots and histograms of data with and without outliers
+tornados |>
+  select(find_outliers(tornados)) |>
+           plot_outlier()
+```
+
+## **Basic Exploration of Missing Values (NAs)**
+
+```{r}
+# Randomly generate NAs for 30
+na.tornados <- tornados |>
+  generateNA(p = 0.3)
+
+# First six rows
+na.tornados |>
+head() |>
+  formattable()
+```
+
+```{r}
+# Create the NA table
+na.tornados |>
+  plot_na_pareto(only_na = TRUE, plot = FALSE) |>
+  formattable() # Publishable table
+```
+
+plot showing frequency of missing values
+
+```{r}
+# Plot the insersect of the columns with missing values
+# This plot visualizes the table above
+na.tornados |>
+  plot_na_pareto(only_na = TRUE)
+```
+
+## **Advanced Exploration of Missing Values (NAs)**
+
+-   Intersect plot that shows, for every combination of columns relevant, how many missing values are common
+
+-   Orange boxes are the columns in question
+
+-   x axis (top green bar plots) show the number of missing values in that column
+
+-   y axis (right green bars) show the number of missing values in the columns in orange blocks
+
+```{r}
+# Plot the intersect of the 5 columns with the most missing values
+# This means that some combinations of columns have missing values in the same row
+na.tornados |>
+  select(inj,fat,len,wid) |>
+  plot_na_intersect(only_na = TRUE) 
+```
+
+### **Determining if NA Observations are the Same**
+
+```{r}
+# Interactive plotly() plot of all NA values to examine every row
+#na.tornados |>
+# select(mo) |>
+# vis_miss() |>
+# ggplotly() 
+```
+
+## **Impute Outliers and NAs**
+
+It is tricky to remove outliers and NAs, while performing imputation the distribution should not be change drastically.
+
+## Classifying Outliers
+
+We will first check if they are natural outliers or not
+
+```{r}
+# Box plot
+tornados %>% # Set the simulated normal data as a data frame
+  ggplot(aes(x = fat, y = st, fill = st)) + # Create a ggplot
+  geom_boxplot(width = 0.5, outlier.size = 2, outlier.alpha = 0.5) +
+  xlab("Fatality") +  # Relabel the x axis label
+  ylab("State") + # Remove the y axis label
+  #scale_fill_OkabeIto() + # Change the color scheme for the fill criteria
+  theme(legend.position = "none")  # Remove the legend 
+```
+
+We will remove outliers using imputate_outliers() and replace them with
+
+-   mean
+
+-   median
+
+-   mode
+
+-   capping
+
+## Mean Imputation
+
+```{r}
+# Raw summary, output suppressed
+mean_out_imp_fatalities <- tornados |>
+  select(fat) |>
+  imputate_outlier(fat, method = "mean")
+
+# Output showing the summary statistics of our imputation
+mean_out_imp_fatalities |>
+  summary() 
+```
+
+```{r}
+# Visualization of the mean imputation
+mean_out_imp_fatalities |>
+  plot()
+```
+
+## Median Imputation
+
+```{r}
+# Raw summary, output suppressed
+med_out_imp_fatalities <- tornados |>
+  select(fat) |>
+  imputate_outlier(fat, method = "median")
+
+# Output showing the summary statistics of our imputation
+med_out_imp_fatalities |>
+  summary()
+```
+
+```{r}
+# Visualization of the median imputation
+med_out_imp_fatalities |>
+  plot()
+```
+
+## Mode Imputation
+
+```{r}
+# Raw summary, output suppressed
+mode_out_imp_fatalities <- tornados |>
+  select(fat) |>
+  imputate_outlier(fat, method = "mode")
+
+# Output showing the summary statistics of our imputation
+mode_out_imp_fatalities |>
+  summary()
+```
+
+```{r}
+# Visualization of the mode imputation
+mode_out_imp_fatalities |>
+plot()
+```
+
+## Capping Imputation (aka Winsorizing)
+
+"Capping imputation" is a term that typically refers to a data imputation technique used in statistics and data analysis. Data imputation is the process of replacing missing or incomplete data with estimated values to make the dataset more complete and suitable for analysis. Capping imputation specifically involves replacing extreme values or outliers in a dataset with a capped or truncated value within a predetermined range.
+
+```{r}
+# Raw summary, output suppressed
+cap_out_imp_fatalities <- tornados |>
+  select(fat) |>
+  imputate_outlier(fat, method = "capping")
+
+# Output showing the summary statistics of our imputation
+cap_out_imp_fatalities |>
+  summary()
+```
+
+```{r}
+# Visualization of the capping imputation
+cap_out_imp_fatalities |>
+  plot()
+```
+
+## Imputing NAs
+
+we can use following
+
+-   Knn :- K-nearest neighbours
+
+-   `rpart`: Recursive Partitioning and Regression Trees (rpart)
+
+-   `mice`: Multivariate Imputation by Chained Equations (MICE)
+
+### **K-Nearest Neighbor (KNN) Imputation**
+
+K-Nearest Neighbor (KNN) imputation is a data imputation technique that uses the K-Nearest Neighbor algorithm to fill in missing values in a dataset. It's a non-parametric, instance-based method that imputes missing values by considering the values of their nearest neighbors in the feature space.
+
+```{r}
+# KNN plot of our dataset without categories
+tornados1 <- na.omit(tornados)
+autoplot(clara(tornados1[-5], 3))
+```
+
+```{r}
+na.tornadosn <- tornados[,sapply(na.tornados,is.numeric)]
+na.omit(na.tornadosn)
+na.tornadosn <- na.tornadosn[1:1000, ]
+na.tornadosn
+```
+
+```{r}
+# Raw summary, output suppressed
+#knn_na_imp_fatalities <- na.tornadosn |>
+#  imputate_na(inj, method = "knn")
+
+# Plot showing the results of our imputation
+#knn_na_imp_fatalities |>
+ # plot()
+```
+
+## Note :- There are no missing values in data set
+
+### **Recursive Partitioning and Regression Trees (rpart)**
+
+Recursive Partitioning and Regression Trees, often abbreviated as "rpart," is a popular algorithm in data mining and machine learning for building decision tree models. It is used for both regression (predicting a numeric target variable) and classification (predicting a categorical target variable) tasks. The "rpart" package in R provides tools for creating and visualizing these decision trees.
+
+```{r}
+# Raw summary, output suppressed
+rpart_na_imp_fatalities <- na.tornadosn |>
+  imputate_na(fat, method = "rpart")
+
+# Plot showing the results of our imputation
+rpart_na_imp_fatalities |>
+  plot()
+```
+
+### **Multivariate Imputation by Chained Equations (MICE)**
+
+Multivariate Imputation by Chained Equations (MICE) is a popular imputation technique used to handle missing data in datasets with multiple variables or features. It is a method for imputing missing values by modeling each variable with missing data as a function of the other variables. MICE is particularly useful when you have missing values in multiple columns and want to preserve the relationships between variables.
+
+```{r}
+# Raw summary, output suppressed
+mice_na_imp_loss <- na.tornadosn |>
+  imputate_na(loss, method = "mice", seed = 123)
+```
+
+```{r}
+# Plot showing the results of our imputation
+mice_na_imp_loss |>
+  plot()
+```
+
+```{r}
+#transformation_web_report(dataset)
+```

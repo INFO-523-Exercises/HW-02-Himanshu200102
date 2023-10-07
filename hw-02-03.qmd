@@ -2,6 +2,7 @@
 title: "Correlating Like a Data Master"
 format: html
 editor: visual
+author: "Himanshu Nimbarte"
 ---
 
 # **Correlating Like a Data Master**
@@ -60,11 +61,15 @@ tornados |>
 plot_correlate()
 ```
 
+Correlation Matrix for attributes of the dataset
+
 ```{r}
 tornados |>
   group_by(st) |>
   plot_correlate()
 ```
+
+Correlation matrix based on "st"
 
 ```{r}
 tornados |> 
@@ -72,6 +77,8 @@ tornados |>
   ggpairs(aes(color = fc, alpha = 0.5)) +
   theme(strip.background = element_blank())
 ```
+
+Co-relation between FC and fat and loss
 
 ## **Describe and Visualize Relationships Based on Target Variables**
 
@@ -101,6 +108,8 @@ summary(num_num)
 plot(num_num)
 ```
 
+Figure shows the linear relationship between fatalities and loss
+
 ### **Numerical Target Variables: Categorical Variable of Interest**
 
 ```{r}
@@ -122,6 +131,8 @@ plot(num_cat) +
   theme(axis.text.x = element_blank())
 ```
 
+Fatalities Box Plot by State
+
 ### **Categorical Target Variables: Numerical Variable of Interest**
 
 ```{r}
@@ -138,6 +149,8 @@ summary(cat_num)
 ```{r}
 plot(cat_num) 
 ```
+
+States density plot by fatalities
 
 ### **Categorical Target Variables: Categorical Variable of Interest**
 
@@ -173,3 +186,5 @@ summary(cat_cat)
 ```{r}
 plot(cat_cat)
 ```
+
+Summary of chi-square test

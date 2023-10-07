@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Himanshu Nimbarte">
 
 <title>Transforming like a data transformer</title>
 <style>
@@ -86,6 +87,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Himanshu Nimbarte </p>
+          </div>
+  </div>
     
   
     
@@ -809,6 +816,7 @@ wid
 <p><img src="hw-02-01_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure shows Normality Diagnosis Plot</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tornados <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(mo) <span class="sc">%&gt;%</span></span>
@@ -926,6 +934,7 @@ wid
 <p><img src="hw-02-01_files/figure-html/unnamed-chunk-5-36.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure shows Normality Diagnosis Plot for Every Month</p>
 </section>
 <section id="transforming-data" class="level2">
 <h2 class="anchored" data-anchor-id="transforming-data">Transforming Data</h2>
@@ -981,6 +990,7 @@ p100       158.00        1.3e+01</code></pre>
 <p><img src="hw-02-01_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure Shows SQRT Transformation and makes the data more readable and easy to process</p>
 <section id="logarithmic-1-transformation" class="level4">
 <h4 class="anchored" data-anchor-id="logarithmic-1-transformation">Logarithmic (+1) Transformation</h4>
 <div class="cell">
@@ -1026,6 +1036,7 @@ p100       158.00        5.1e+00</code></pre>
 <p><img src="hw-02-01_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure Shows Log Transformation which makes data more readable and easy for using</p>
 </section>
 <section id="inverse-transformation" class="level4">
 <h4 class="anchored" data-anchor-id="inverse-transformation">Inverse Transformation</h4>
@@ -1072,6 +1083,7 @@ p100       158.00        1.0e+00</code></pre>
 <p><img src="hw-02-01_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure Shows Inverse Transformation</p>
 </section>
 </section>
 <section id="squared-transformation" class="level2">
@@ -1119,6 +1131,7 @@ p100       158.00          24964</code></pre>
 <p><img src="hw-02-01_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure Shows Squared Transformation and for this data it does not help</p>
 </section>
 <section id="cubed-transformation" class="level2">
 <h2 class="anchored" data-anchor-id="cubed-transformation">Cubed Transformation</h2>
@@ -1165,6 +1178,7 @@ p100       158.00        3944312</code></pre>
 <p><img src="hw-02-01_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure Shows Cubed Transformation, it can handle negative values</p>
 </section>
 <section id="box-con-transformation" class="level2">
 <h2 class="anchored" data-anchor-id="box-con-transformation">Box Con Transformation</h2>
@@ -1247,6 +1261,7 @@ p100       158.00          2.349</code></pre>
 <p><img src="hw-02-01_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure Shows Box Con Transformation and is helpful for data to follow normal distribution</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#transformation_web_report(tornados)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

@@ -2,6 +2,7 @@
 title: "Imputing Like a Data Scientist"
 format: html
 editor: visual
+author: "Himanshu Nimbarte"
 ---
 
 ```{r}
@@ -149,6 +150,8 @@ tornados %>% # Set the simulated normal data as a data frame
   theme(legend.position = "none")  # Remove the legend 
 ```
 
+Following plot demonstrate classified outliers
+
 We will remove outliers using imputate_outliers() and replace them with
 
 -   mean
@@ -178,6 +181,8 @@ mean_out_imp_fatalities |>
   plot()
 ```
 
+Figure shows imputation using mean method
+
 ## Median Imputation
 
 ```{r}
@@ -197,6 +202,8 @@ med_out_imp_fatalities |>
   plot()
 ```
 
+Figure shows imputation using median method
+
 ## Mode Imputation
 
 ```{r}
@@ -215,6 +222,8 @@ mode_out_imp_fatalities |>
 mode_out_imp_fatalities |>
 plot()
 ```
+
+Figure shows imputation using mode method
 
 ## Capping Imputation (aka Winsorizing)
 
@@ -237,6 +246,8 @@ cap_out_imp_fatalities |>
   plot()
 ```
 
+Following shows imputation using capping
+
 ## Imputing NAs
 
 we can use following
@@ -257,6 +268,8 @@ tornados1 <- na.omit(tornados)
 autoplot(clara(tornados1[-5], 3))
 ```
 
+####                                            Plotting clusters based on tornado sataset
+
 ```{r}
 na.tornadosn <- tornados[,sapply(na.tornados,is.numeric)]
 na.omit(na.tornadosn)
@@ -274,7 +287,7 @@ na.tornadosn
  # plot()
 ```
 
-## Note :- There are no missing values in data set
+## There are no missing values in data set
 
 ### **Recursive Partitioning and Regression Trees (rpart)**
 

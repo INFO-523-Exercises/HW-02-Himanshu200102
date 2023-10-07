@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Himanshu Nimbarte">
 
 <title>Correlating Like a Data Master</title>
 <style>
@@ -86,6 +87,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Himanshu Nimbarte </p>
+          </div>
+  </div>
     
   
     
@@ -5401,6 +5408,7 @@ See help("Deprecated")</code></pre>
 <p><img src="hw-02-03_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Correlation Matrix for attributes of the dataset</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tornados <span class="sc">|&gt;</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(st) <span class="sc">|&gt;</span></span>
@@ -5720,6 +5728,7 @@ See help("Deprecated")</code></pre>
 <p><img src="hw-02-03_files/figure-html/unnamed-chunk-5-50.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Correlation matrix based on “st”</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>tornados <span class="sc">|&gt;</span> </span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(fc,fat,loss) <span class="sc">|&gt;</span></span>
@@ -5751,6 +5760,7 @@ Removed 27170 rows containing missing values</code></pre>
 <p><img src="hw-02-03_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Co-relation between FC and fat and loss</p>
 </section>
 <section id="describe-and-visualize-relationships-based-on-target-variables" class="level2">
 <h2 class="anchored" data-anchor-id="describe-and-visualize-relationships-based-on-target-variables"><strong>Describe and Visualize Relationships Based on Target Variables</strong></h2>
@@ -5801,6 +5811,7 @@ F-statistic: 1.186e+04 on 1 and 41515 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p><img src="hw-02-03_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Figure shows the linear relationship between fatalities and loss</p>
 </section>
 <section id="numerical-target-variables-categorical-variable-of-interest" class="level3">
 <h3 class="anchored" data-anchor-id="numerical-target-variables-categorical-variable-of-interest"><strong>Numerical Target Variables: Categorical Variable of Interest</strong></h3>
@@ -5897,6 +5908,7 @@ supplied 53.</code></pre>
 <p><img src="hw-02-03_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Fatalities Box Plot by State</p>
 </section>
 <section id="categorical-target-variables-numerical-variable-of-interest" class="level3">
 <h3 class="anchored" data-anchor-id="categorical-target-variables-numerical-variable-of-interest"><strong>Categorical Target Variables: Numerical Variable of Interest</strong></h3>
@@ -5980,6 +5992,7 @@ supplied 52.</code></pre>
 <p><img src="hw-02-03_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>States density plot by fatalities</p>
 </section>
 <section id="categorical-target-variables-categorical-variable-of-interest" class="level3">
 <h3 class="anchored" data-anchor-id="categorical-target-variables-categorical-variable-of-interest"><strong>Categorical Target Variables: Categorical Variable of Interest</strong></h3>
@@ -6113,6 +6126,7 @@ Test for independence of all factors:
 <p><img src="hw-02-03_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Summary of chi-square test</p>
 </section>
 </section>
 </section>

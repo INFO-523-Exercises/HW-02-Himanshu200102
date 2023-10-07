@@ -2,6 +2,7 @@
 title: "Transforming like a data transformer"
 format: html
 editor: visual
+author: "Himanshu Nimbarte"
 ---
 
 # Setting Up
@@ -55,12 +56,16 @@ tornados |>
 plot_normality(inj, fat, len, wid)
 ```
 
+Figure shows Normality Diagnosis Plot
+
 ```{r}
 tornados %>%
   group_by(mo) %>%
   select(inj,fat) %>%
   plot_normality()
 ```
+
+Figure shows Normality Diagnosis Plot for Every Month
 
 ## Transforming Data
 
@@ -86,6 +91,8 @@ sqrtDur |>
   plot()
 ```
 
+Figure Shows SQRT Transformation and makes the data more readable and easy to process
+
 #### Logarithmic (+1) Transformation
 
 ```{r}
@@ -98,6 +105,8 @@ summary(Log1Ins)
 Log1Ins |>
   plot()
 ```
+
+Figure Shows Log Transformation which makes data more readable and easy for using
 
 #### Inverse Transformation
 
@@ -112,6 +121,8 @@ InvIns |>
   plot()
 ```
 
+Figure Shows Inverse Transformation
+
 ## Squared Transformation
 
 ```{r}
@@ -125,6 +136,8 @@ SqrdIns |>
   plot()
 ```
 
+Figure Shows Squared Transformation and for this data it does not help
+
 ## Cubed Transformation
 
 ```{r}
@@ -137,6 +150,8 @@ summary(CubeIns)
 CubeIns |>
   plot()
 ```
+
+Figure Shows Cubed Transformation, it can handle negative values
 
 ## Box Con Transformation
 
@@ -156,6 +171,8 @@ summary(BoxCoxIns)
 BoxCoxIns |>
   plot()
 ```
+
+Figure Shows Box Con Transformation and is helpful for data to follow normal distribution
 
 ```{r}
 #transformation_web_report(tornados)
